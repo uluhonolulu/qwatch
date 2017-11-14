@@ -1,0 +1,32 @@
+{
+  "name": "qwatch",
+  "version": "1.0.0",
+  "description": "Watch crypto wallets and send notifications",
+  "main": "index.js",
+  "scripts": {
+    "start": "node server/server.js",
+    "test": "test"
+  },
+  "engines": {
+    "node": "8.5.0"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/uluhonolulu/qwatch.git"
+  },
+  "keywords": [
+    "crypto",
+    "blockchain",
+    "bitcoin",
+    "ethereum"
+  ],
+  "author": "Artem Smirnov",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/uluhonolulu/qwatch/issues"
+  },
+  "homepage": "https://github.com/uluhonolulu/qwatch",
+  "dependencies": {
+    "express": "^4.16.2"
+  }
+}
