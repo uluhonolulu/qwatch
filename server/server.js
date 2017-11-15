@@ -32,9 +32,14 @@ app.post('/webhook', (req, res) => {
         console.log(webhookEvent);  //{"sender":{"id":"1498573146930404"},"recipient":{"id":"528874777474183"},"timestamp":1510736698907,"message":{"mid":"mid.$cAAG78Qq3R3pl8DHmG1fvuyoXL50j","seq":37364,"text":"yooo"}}
 
         //send a response
+        var senderId = webhookEvent.sender.id;
         request.post("https://graph.facebook.com/v2.6/me/messages?access_token=" + process.env.PAGE_ACCESS_TOKEN, {
-          "recipient":{"id":"528874777474183"},
+          "recipient":{"id":senderId},
           "message":{"text":"hey bro, whassup?"}
+        }, function (error, response, body) {
+          console.log('error:', error); // Print the error if one occurred
+          console.log('statusCode:', response && response.statusCode); // Print the response status code if a response was received
+          console.log('body:', body); // Print the HTML for the Google homepage.
         });
 
       });
