@@ -33,10 +33,11 @@ app.post('/webhook', (req, res) => {
 
         //send a response
         var senderId = webhookEvent.sender.id;
-        request.post("https://graph.facebook.com/v2.6/me/messages?access_token=" + process.env.PAGE_ACCESS_TOKEN, {
+        var data = {
           "recipient":{"id":senderId},
           "message":{"text":"hey bro, whassup?"}
-        }, function (error, response, body) {
+        };
+        request.post("https://graph.facebook.com/v2.6/me/messages?access_token=" + process.env.PAGE_ACCESS_TOKEN, {form: data}, function (error, response, body) {
           console.log('error:', error); // Print the error if one occurred
           console.log('statusCode:', response && response.statusCode); // Print the response status code if a response was received
           console.log('body:', body); // Print the HTML for the Google homepage.
