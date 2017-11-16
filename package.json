@@ -4,7 +4,7 @@
   "description": "Watch crypto wallets and send notifications",
   "main": "index.js",
   "scripts": {
-    "start": "node server/server.js",
+    "start": "node app.js",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "engines": {
@@ -28,7 +28,13 @@
   "homepage": "https://github.com/uluhonolulu/qwatch",
   "dependencies": {
     "body-parser": "^1.18.2",
+    "cookie-parser": "~1.4.3",
+    "debug": "~2.6.9",
     "express": "^4.16.2",
-    "request": "^2.83.0"
+    "request": "^2.83.0",
+    "string": "^3.3.3",
+    "hbs": "~4.0.1",
+    "morgan": "~1.9.0",
+    "serve-favicon": "~2.4.5"
   }
 }
