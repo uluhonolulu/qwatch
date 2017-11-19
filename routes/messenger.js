@@ -1,6 +1,7 @@
 var express = require('express');
 var router = express.Router();
 const request = require('request');
+var S = require('string').extendPrototype();  //so that String gets new functions
 
 //receive a message
 router.post('/', (req, res) => {
@@ -22,7 +23,7 @@ router.post('/', (req, res) => {
   
         //send a response
         var senderId = webhookEvent.sender.id;
-        sendMessage(senderId, `Got your request: ${messageText}.`);
+        handleRequest(messageText, senderId);
       });
   
       // Returns a '200 OK' response to all requests
@@ -79,4 +80,30 @@ function sendMessage(recipientId, message){
     console.log('body:', body); // Print the response.
   });
 
+}
+
+function handleRequest(messageText, senderId){
+  sendMessage(senderId, `Got your request: ${messageText}.`);
+  var coin = messageText.split(' ');
+  if(coin.toUpperCase() === "BTC"){
+    var address = messageText.chompLeft("BTC ");
+    sendMessage(senderId, `Watching address: ${address}.`);
+  }else{
+    sendMessage(senderId, `The coin ${coin} is not supported.`);
+  }
+}
+
+function createHook(address) {
+  //TODO: change btc to coin name
+  var url = `https://api.blockcypher.com/v1/btc/main/hooks?token=${process.env.BLOCKCYPHER_TOKEN}`;
+  var data = {
+    "event": "confirmed-tx",
+    address,
+    url: "https://young-anchorage-67240.herokuapp.com/blockchain"
+  }
+  request.post(url, data, function (error, response, body) {
+    console.log('error:', error); // Print the error if one occurred
+    console.log('statusCode:', response && response.statusCode); // Print the response status code if a response was received
+    console.log('body:', body); // Print the response.
+  });  
 }

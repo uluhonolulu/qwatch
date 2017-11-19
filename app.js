@@ -25,9 +25,13 @@ app.use(express.static(path.join(__dirname, 'public')));
 app.use('/', index);
 app.use('/users', users);
 
-// Creates the endpoint for our webhook 
+// Endpoint for Messenger 
 var messenger = require('./routes/messenger');
 app.use('/webhook', messenger);
+
+// Endpoint for blockchains
+var blockchain = require('./routes/blockchain');
+app.use('/blockchain', blockchain);
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {
