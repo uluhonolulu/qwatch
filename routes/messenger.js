@@ -87,6 +87,8 @@ function sendMessage(recipientId, message){
 
 }
 
+router.sendMessage = sendMessage;
+
 function handleRequest(messageText, senderId){
   sendMessage(senderId, `Got your request: ${messageText}.`);
   var coin = messageText.split(' ')[0];
