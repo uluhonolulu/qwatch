@@ -89,7 +89,7 @@ function sendMessage(recipientId, message){
 
 function handleRequest(messageText, senderId){
   sendMessage(senderId, `Got your request: ${messageText}.`);
-  var coin = messageText.split(' ');
+  var coin = messageText.split(' ')[0];
   if(coin.toUpperCase() === "BTC"){
     var address = messageText.chompLeft("BTC ");
     sendMessage(senderId, `Watching address: ${address}.`);
