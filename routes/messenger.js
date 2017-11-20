@@ -22,8 +22,13 @@ router.post('/', (req, res) => {
         let messageText = webhookEvent.message.text;
   
         //send a response
-        var senderId = webhookEvent.sender.id;
-        handleRequest(messageText, senderId);
+        try {
+          var senderId = webhookEvent.sender.id;
+          handleRequest(messageText, senderId);   
+        } catch (error) {
+          console.log(error);
+        }
+      
       });
   
       // Returns a '200 OK' response to all requests
@@ -73,7 +78,7 @@ function sendMessage(recipientId, message){
   };
 
   var url = "https://graph.facebook.com/v2.6/me/messages?access_token=" + process.env.PAGE_ACCESS_TOKEN;
-  console.log(`sending reguest to FB: ${url}`);
+  console.log(`sending reguest to FB: ${message}`);
   request.post(url, {form: data}, function (error, response, body) {
     console.log('error:', error); // Print the error if one occurred
     console.log('statusCode:', response && response.statusCode); // Print the response status code if a response was received

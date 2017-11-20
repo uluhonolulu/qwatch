@@ -34,6 +34,7 @@
     "express": "^4.16.2",
     "hbs": "~4.0.1",
     "morgan": "~1.9.0",
+    "newrelic": "^2.4.0",
     "request": "^2.83.0",
     "serve-favicon": "~2.4.5",
     "string": "^3.3.3"
