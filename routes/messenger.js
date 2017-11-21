@@ -98,13 +98,13 @@ async function handleRequest(messageText, senderId){
   var coin = messageText.split(' ')[0];
   if(coin.toUpperCase() === "BTC"){
     var address = messageText.chompLeft("BTC ");
+    createHook(address);
     await saveRecord("Messenger", coin, address, senderId);
     sendMessage(senderId, `Watching address: ${address}.`);
   }else{
     sendMessage(senderId, `The coin ${coin} is not supported.`);
   }
 }
-
 
 async function saveRecord(source, coin, address, userId){
   console.log("Saving the record..");
@@ -128,7 +128,9 @@ function createHook(address) {
     address,
     url: "https://young-anchorage-67240.herokuapp.com/blockchain"
   }
+  console.log("Creating a hook");
   request.post(url, data, function (error, response, body) {
+    console.log("Created a hook");
     console.log('error:', error); // Print the error if one occurred
     console.log('statusCode:', response && response.statusCode); // Print the response status code if a response was received
     console.log('body:', body); // Print the response.
