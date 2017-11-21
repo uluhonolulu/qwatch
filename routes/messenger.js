@@ -98,7 +98,7 @@ async function handleRequest(messageText, senderId){
   var coin = messageText.split(' ')[0];
   if(coin.toUpperCase() === "BTC"){
     var address = messageText.chompLeft("BTC ");
-    createHook(address);
+    createHook(address, senderId);
     await saveRecord("Messenger", coin, address, senderId);
     sendMessage(senderId, `Watching address: ${address}.`);
   }else{
@@ -120,7 +120,7 @@ async function saveRecord(source, coin, address, userId){
 
 router.saveRecord = saveRecord;
 
-function createHook(address) {
+function createHook(address, senderId) {
   //TODO: change btc to coin name
   var url = `https://api.blockcypher.com/v1/btc/main/hooks?token=${process.env.BLOCKCYPHER_TOKEN}`;
   var data = {
@@ -129,10 +129,13 @@ function createHook(address) {
     url: "https://young-anchorage-67240.herokuapp.com/blockchain"
   }
   console.log("Creating a hook");
-  request.post(url, data, function (error, response, body) {
+  request.post(url, {json:data}, function (error, response, body) {  //TODO: return promise
     console.log("Created a hook");
     console.log('error:', error); // Print the error if one occurred
     console.log('statusCode:', response && response.statusCode); // Print the response status code if a response was received
     console.log('body:', body); // Print the response.
+    if (body.error) {
+      sendMessage(senderId, body.error);  //TODO: move this to the caller
+    }
   });  
 }
