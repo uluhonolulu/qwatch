@@ -3,28 +3,32 @@ var router = express.Router();
 const request = require('request');
 var S = require('string').extendPrototype();  //so that String gets new functions
 
+//MongoDB  
+const mongo = require('../infrastructure/mongo');
+
 //receive a message
-router.post('/', (req, res) => {
-    console.log("got message");
-    console.log(JSON.stringify(req.body));
+router.post('/', async (req, res) => {
+    console.log("got webhook message");
+    //console.log(JSON.stringify(req.body));
     let body = req.body;
     
     // Checks this is an event from a page subscription
     if (body.object === 'page') {
   
       // Iterates over each entry - there may be multiple if batched
-      body.entry.forEach(function(entry) {
+      body.entry.forEach(async (entry) =>  {
   
         // Gets the message. entry.messaging is an array, but 
         // will only ever contain one message, so we get index 0
         let webhookEvent = entry.messaging[0];
-        console.log(webhookEvent);  //{"sender":{"id":"1498573146930404"},"recipient":{"id":"528874777474183"},"timestamp":1510736698907,"message":{"mid":"mid.$cAAG78Qq3R3pl8DHmG1fvuyoXL50j","seq":37364,"text":"yooo"}}
+        //console.log("webhookEvent is " + webhookEvent);  //{"sender":{"id":"1498573146930404"},"recipient":{"id":"528874777474183"},"timestamp":1510736698907,"message":{"mid":"mid.$cAAG78Qq3R3pl8DHmG1fvuyoXL50j","seq":37364,"text":"yooo"}}
         let messageText = webhookEvent.message.text;
+        console.log(messageText);
   
         //send a response
         try {
           var senderId = webhookEvent.sender.id;
-          handleRequest(messageText, senderId);   
+          await handleRequest(messageText, senderId);   
         } catch (error) {
           console.log(error);
         }
@@ -89,16 +93,32 @@ function sendMessage(recipientId, message){
 
 router.sendMessage = sendMessage;
 
-function handleRequest(messageText, senderId){
+async function handleRequest(messageText, senderId){
   sendMessage(senderId, `Got your request: ${messageText}.`);
   var coin = messageText.split(' ')[0];
   if(coin.toUpperCase() === "BTC"){
     var address = messageText.chompLeft("BTC ");
+    await saveRecord("Messenger", coin, address, senderId);
     sendMessage(senderId, `Watching address: ${address}.`);
   }else{
     sendMessage(senderId, `The coin ${coin} is not supported.`);
   }
 }
+
+
+async function saveRecord(source, coin, address, userId){
+  console.log("Saving the record..");
+  let db = await mongo.createConnection();
+  console.log("awaited");
+  db.collection("Watches").insertOne({
+    source, coin, address, userId
+  })
+  db.close();   
+  console.log("Record saved");   
+  return true;
+}
+
+router.saveRecord = saveRecord;
 
 function createHook(address) {
   //TODO: change btc to coin name

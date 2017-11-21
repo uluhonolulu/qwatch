@@ -9,17 +9,30 @@ let should = chai.should();
 
 chai.use(chaiHttp);
 
+const mongo = require('../infrastructure/mongo');
+const messenger = require('../routes/messenger');
+describe("test async", () => {
+    it("should connect", async () => {
+        return await mongo.createConnection(); 
+    });
+
+    it("should save", async () => {
+        return await messenger.saveRecord("test", "BTG", "addr", "me");
+    })
+});
+
 describe("messenger webhook", () => {
-    it("should handle webhook requests without errors and return 200 OK", (done) => {
+    it("should handle webhook requests without errors and return 200 OK", () => {
         var data = require("./messengerRequest");
         var expect = chai.expect;
-        chai.request(app)
+        return chai.request(app)
             .post('/webhook')
             .send(data)
             .end((err, res) => {
                 expect(err).to.be.null;
                 expect(res).to.have.status(200); 
-                done();               
+                //done();               
             })
     })
-})
+});
+
