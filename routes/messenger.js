@@ -134,7 +134,7 @@ function createHook(coin, address, senderId) {
   bcapi.createHook(webhook, (error, body) => {
     console.log("Created a hook");
     console.log('error:', error || body.error); // Print the error if one occurred
-    console.log('statusCode:', response && response.statusCode); // Print the response status code if a response was received
+    //console.log('statusCode:', response && response.statusCode); // Print the response status code if a response was received
     console.log('body:', body); // Print the response.
     if (body.error) {
       sendMessage(senderId, body.error);  //TODO: move this to the caller
