@@ -131,6 +131,8 @@ function createHook(coin, address, senderId) {
     address,
     url: callbackUrl
   };
+  console.log("Creating a hook");
+  console.log(webhook);
   bcapi.createHook(webhook, (error, body) => {
     console.log("Created a hook");
     console.log('error:', error || body.error); // Print the error if one occurred
