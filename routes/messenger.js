@@ -96,10 +96,10 @@ router.sendMessage = sendMessage;
 async function handleRequest(messageText, senderId){
   sendMessage(senderId, `Got your request: ${messageText}.`);
   var coin = messageText.split(' ')[0];
-  if(coin.toUpperCase() === "BTC"){
-    var address = messageText.chompLeft("BTC ");
-    createHook(address, senderId);
-    await saveRecord("Messenger", coin, address, senderId);
+  if(["BTC", "ETH", "LTC", "DOGE"].includes(coin.toUpperCase())){
+    var address = messageText.chompLeft(coin + " ");
+    createHook(coin, address, senderId);
+    await saveRecord("Messenger", coin, address.toString(), senderId);
     sendMessage(senderId, `Watching address: ${address}.`);
   }else{
     sendMessage(senderId, `The coin ${coin} is not supported.`);
@@ -118,24 +118,26 @@ async function saveRecord(source, coin, address, userId){
   return true;
 }
 
-router.saveRecord = saveRecord;
+//.saveRecord = saveRecord;
 
-function createHook(address, senderId) {
-  //TODO: change btc to coin name
-  var url = `https://api.blockcypher.com/v1/btc/main/hooks?token=${process.env.BLOCKCYPHER_TOKEN}`;
-  var data = {
-    "event": "confirmed-tx",
+const bcypher = require('blockcypher');
+
+function createHook(coin, address, senderId) {
+  var bcapi = new bcypher(coin,'main',process.env.BLOCKCYPHER_TOKEN);
+  var app = "Messenger";
+  var callbackUrl = `https://young-anchorage-67240.herokuapp.com/blockchain/${coin}/${address}/${app}/${senderId}`;
+  var webhook = {
+    event: "confirmed-tx",
     address,
-    url: "https://young-anchorage-67240.herokuapp.com/blockchain"
-  }
-  console.log("Creating a hook");
-  request.post(url, {json:data}, function (error, response, body) {  //TODO: return promise
+    url: callbackUrl
+  };
+  bcapi.createHook(webhook, (error, body) => {
     console.log("Created a hook");
-    console.log('error:', error); // Print the error if one occurred
+    console.log('error:', error || body.error); // Print the error if one occurred
     console.log('statusCode:', response && response.statusCode); // Print the response status code if a response was received
     console.log('body:', body); // Print the response.
     if (body.error) {
       sendMessage(senderId, body.error);  //TODO: move this to the caller
-    }
-  });  
+    }    
+  }); 
 }
