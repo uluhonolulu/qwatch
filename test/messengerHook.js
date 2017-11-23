@@ -11,17 +11,22 @@ chai.use(chaiHttp);
 
 const mongo = require('../infrastructure/mongo');
 const messenger = require('../routes/messenger');
-describe("test async", () => {
-    it("should connect", async () => {
-        return await mongo.createConnection(); 
-    });
+// describe("test async", () => {
+//     it("should connect", async () => {
+//         return await mongo.createConnection(); 
+//     });
 
-    it("should save", async () => {
-        return await messenger.saveRecord("test", "BTG", "addr", "me");
-    })
-});
+//     it("should save", async () => {
+//         return await messenger.saveRecord("test", "BTG", "addr", "me");
+//     })
+// });
 
 describe("messenger webhook", () => {
+    it("calling createHook", (done) => {
+        messenger.createHook('btg', 'addr', 'senderId');
+        done();
+    });
+
     it("should handle webhook requests without errors and return 200 OK", () => {
         var data = require("./messengerRequest");
         var expect = chai.expect;

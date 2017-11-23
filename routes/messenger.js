@@ -97,7 +97,7 @@ async function handleRequest(messageText, senderId){
   sendMessage(senderId, `Got your request: ${messageText}.`);
   var coin = messageText.split(' ')[0];
   if(["BTC", "ETH", "LTC", "DOGE"].includes(coin.toUpperCase())){
-    var address = messageText.chompLeft(coin + " ");
+    var address = messageText.chompLeft(coin + " ").toString();
     createHook(coin, address, senderId);
     await saveRecord("Messenger", coin, address.toString(), senderId);
     sendMessage(senderId, `Watching address: ${address}.`);
@@ -118,12 +118,12 @@ async function saveRecord(source, coin, address, userId){
   return true;
 }
 
-//.saveRecord = saveRecord;
+router.createHook = createHook;
 
 const bcypher = require('blockcypher');
 
 function createHook(coin, address, senderId) {
-  var bcapi = new bcypher(coin,'main',process.env.BLOCKCYPHER_TOKEN);
+  var bcapi = new bcypher(coin.toLowerCase(),'main',process.env.BLOCKCYPHER_TOKEN);
   var app = "Messenger";
   var callbackUrl = `https://young-anchorage-67240.herokuapp.com/blockchain/${coin}/${address}/${app}/${senderId}`;
   var webhook = {
