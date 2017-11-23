@@ -12,7 +12,19 @@ router.post('/:coin/:address/:app/:userId', async (req, res) => {
     var transactionOutput = transaction.outputs.find(output => output.addresses[0] === address);
     if (transactionOutput) {
         var coin = req.params.coin.toUpperCase();
-        var amount = transactionOutput.value*0.00000001;  //50000 => 0.0005
+        var coeff = 1;
+        switch (coin) {
+            case 'BTC':
+                coeff = 0.00000001;
+                break;
+            case 'ETH':
+                coeff = 0.000000000000000001;
+                break;
+        
+            default:
+                break;
+        }
+        var amount = transactionOutput.value * coeff;  //50000 => 0.0005
         var app = req.params.app; //should be Messenger for now
         var userId = req.params.userId  //the ID of the Messenger user
         if (app === "Messenger") {
