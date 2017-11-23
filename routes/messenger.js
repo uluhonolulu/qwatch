@@ -125,6 +125,9 @@ const bcypher = require('blockcypher');
 function createHook(coin, address, senderId) {
   var bcapi = new bcypher(coin.toLowerCase(),'main',process.env.BLOCKCYPHER_TOKEN);
   var app = "Messenger";
+  if (coin.toUpperCase() === 'ETH') {
+    address = address.chompLeft('0x').toString();
+  }
   var callbackUrl = `https://young-anchorage-67240.herokuapp.com/blockchain/${coin}/${address}/${app}/${senderId}`;
   var webhook = {
     event: "confirmed-tx",
