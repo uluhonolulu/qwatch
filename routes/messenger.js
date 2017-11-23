@@ -94,7 +94,7 @@ function sendMessage(recipientId, message){
 router.sendMessage = sendMessage;
 
 async function handleRequest(messageText, senderId){
-  sendMessage(senderId, `Got your request: ${messageText}.`);
+  //sendMessage(senderId, `Got your request: ${messageText}.`);
   var coin = messageText.split(' ')[0];
   if(["BTC", "ETH", "LTC", "DOGE"].includes(coin.toUpperCase())){
     var address = messageText.chompLeft(coin + " ").toString();
@@ -107,14 +107,14 @@ async function handleRequest(messageText, senderId){
 }
 
 async function saveRecord(source, coin, address, userId){
-  console.log("Saving the record..");
+  //console.log("Saving the record..");
   let db = await mongo.createConnection();
-  console.log("awaited");
+  //console.log("awaited");
   db.collection("Watches").insertOne({
     source, coin, address, userId
   })
   db.close();   
-  console.log("Record saved");   
+  console.log("Watch record saved");   
   return true;
 }
 
@@ -131,15 +131,18 @@ function createHook(coin, address, senderId) {
     address,
     url: callbackUrl
   };
-  console.log("Creating a hook");
-  console.log(webhook);
+  //console.log("Creating a hook");
+  //console.log(webhook);
   bcapi.createHook(webhook, (error, body) => {
     console.log("Created a hook");
-    console.log('error:', error || body.error); // Print the error if one occurred
-    //console.log('statusCode:', response && response.statusCode); // Print the response status code if a response was received
-    console.log('body:', body); // Print the response.
-    if (body.error) {
-      sendMessage(senderId, body.error);  //TODO: move this to the caller
+    error = error || body.error;
+    if (error) {
+      console.log('error:', error); // Print the error if one occurred   
+    }
+    //TODO: save hook id -- body.id for removing
+    //console.log('body:', body); // Print the response.
+    if (error) {
+      sendMessage(senderId, error);  //TODO: move this to the caller
     }    
   }); 
 }

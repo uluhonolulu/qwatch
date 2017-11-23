@@ -6,10 +6,7 @@ const mongo = require('../infrastructure/mongo');
 router.post('/:coin/:address/:app/:userId', async (req, res) => {
     console.log("new transaction:");
     var transaction = req.body;
-    console.log(JSON.stringify(req.body));  
-    //need: sender's address, coin, wallet address, amount
-    //loop over all matching coin & wallet address records in Watches
-    //for each, get the userId and send to her
+    //console.log(JSON.stringify(req.body));  
     //for now, we only work with deposits 
     var address = req.params.address;   //wallet address we're watching
     var transactionOutput = transaction.outputs.find(output => output.addresses[0] === address);
