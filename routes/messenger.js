@@ -11,6 +11,7 @@ router.post('/', async (req, res) => {
     console.log("got webhook message");
     //console.log(JSON.stringify(req.body));
     let body = req.body;
+    await saveUserRequest(body);
     
     // Checks this is an event from a page subscription
     if (body.object === 'page') {
