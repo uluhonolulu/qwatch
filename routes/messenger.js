@@ -121,6 +121,17 @@ async function saveRecord(source, coin, address, userId){
   return true;
 }
 
+async function saveUserRequest(body){
+  let db = await mongo.createConnection();
+  //console.log("awaited");
+  db.collection("Requests").insertOne({
+    body
+  })
+  db.close();   
+  console.log("Watch record saved");   
+  return true;  
+}
+
 router.createHook = createHook;
 
 const bcypher = require('blockcypher');
