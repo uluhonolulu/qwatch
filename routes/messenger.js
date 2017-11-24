@@ -75,10 +75,13 @@ router.get('/', function(req, res, next) {
 module.exports = router;
 
 //send a message
-function sendMessage(recipientId, message){
+function sendMessage(recipientId, message, isNotification){
   var data = {
     "recipient":{"id":recipientId},
     "message":{"text":message}
+  };
+  if (isNotification) {
+    data.tag = "PERSONAL_FINANCE_UPDATE"
   };
 
   var url = "https://graph.facebook.com/v2.6/me/messages?access_token=" + process.env.PAGE_ACCESS_TOKEN;

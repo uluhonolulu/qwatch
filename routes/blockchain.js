@@ -29,7 +29,7 @@ router.post('/:coin/:address/:app/:userId', async (req, res) => {
         var userId = req.params.userId  //the ID of the Messenger user
         if (app === "Messenger") {
             let message = `Deposited ${amount} ${coin} into ${address}.`;//Deposited 0.0005 BTC into 3QTkiJ2vwhErpBE5oLBifPmG68bt4KcQDy
-            messenger.sendMessage(userId, message);
+            messenger.sendMessage(userId, message, true);
         }
     }
 
